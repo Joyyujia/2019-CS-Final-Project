@@ -1,0 +1,8 @@
+public interface Lookconfig {
+	int x= 50;
+	int y =100;
+	int space = 10;
+	int arc= 50;
+	int size = 60;
+	int num=9;
+}
