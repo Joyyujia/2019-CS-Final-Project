@@ -1,0 +1,51 @@
+import java.awt.color.*;
+import java.awt.Font.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.*;
+import java.awt.RenderingHints;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+@SuppressWarnings("serial")
+public class GameLook extends JFrame implements Lookconfig {
+	private int[][] array = new int[8][8];
+	JLabel timeJl;
+
+	// show the time left
+
+	public static void main(String[] args) throws InterruptedException {
+		GameLook g = new GameLook();
+		g.showUI();
+
+	}
+
+	public void showUI() throws InterruptedException {
+		setTitle("Picture Match");
+		setSize(700, 800);
+		setDefaultCloseOperation(3);
+		setLocationRelativeTo(null);
+		setResizable(true);
+		setLayout(null);
+
+
+	// add button for new game
+	// ImageIcon start = new JButton("res/start.png");
+	JButton startJB = new JButton("new Game");
+	startJB.setBounds(30,700,100,40);
+	startJB.setBorderPainted(false);
+	//set the border blank
+	startJB.setFocusable(false);
+	startJB.setContentAreaFilled(false);
+	this.add(startJB);
+	}
+	//add the button for ranking
+	JButton save = new JButton("Ranking");
+	save.setFocusable(false);
+	
+
+}
