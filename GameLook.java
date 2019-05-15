@@ -1,3 +1,9 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -5,7 +11,7 @@ import javax.swing.JLabel;
 
 public class GameLook extends JFrame implements Lookconfig{
 	
-	private int[][] info = new int [8][8];
+	private int[][] table = new int [8][8];
 	
 	JLabel time;
 
@@ -44,22 +50,83 @@ public class GameLook extends JFrame implements Lookconfig{
 		
 		this.add(rank);
 		
-		//show remaining time
+		//show time button
 		JLabel jl = new JLabel("Time:");
 		
 		jl.setBounds(440,700,80,50);
 		
 		this.add(jl);
 		
+		jl.setVisible(true);
 		
+		//show the remaining time
 		JLabel timeJl = new JLabel("90");
 		
+		timeJl.setBounds(520,700,80,50);
+		
+		this.add(timeJl);
+		
+		timeJl.setVisible(true);
+		
+		GameListener gl = new GameListener();
+		
+		gl.setFrame(this);
+		
+		gl.setTimeJl(timeJl);
+		
+		gl.setArray(table);
 		
 		
 		
 		
 	}
+	
+@Override
 
+public void paint(Graphics g){
+	super.paint(g);
+	
+	PaintPics(g);
+	
+}
+
+public void PaintPics (Graphics g){
+	Image i= createImage(space+(size+space)*table[0].length,space+(size+space)*table.length);
+	
+	Graphics2D grid = (Graphics2D) i.getGraphics();
+	
+	grid.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+	
+
+	//create background
+	
+	grid.setColor(new Color(210,180,140));
+	
+	grid.fillRoundRect(0, 0, space+(size+space)*table[0].length,space+(size+space)*table[0].length, arc,arc);
+	
+	//draw the grid
+	
+	grid.setColor(new Color(245,245, 200 ));
+	
+	for(int r=0; r< table.length; r++){
+		
+		for(int c=0; c<table[r].length; c++){
+			
+			grid.fillRect(space+(space+size)*r,space+(space+size)*c , size, size);
+			
+		}
+		
+	}
+	
+	//add pictures
+	
+	
+	
+	
+	
+	
+	
+}
 	
 
 }
