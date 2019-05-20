@@ -110,6 +110,17 @@ public class GameSetting implements Lookconfig{
 			
 		}
 		
+		for(int i=r1;i>-1; i--){
+			if(newArr[i][c1+1]==0){
+				if(sit2(i,c1+1,r2+1,c2+1,newArr)){
+					path.add(new Point(i-1,c1));
+					return true;
+				}
+			}else{
+				break;
+			}
+		}
+		
 		return false;
 	}
 	
