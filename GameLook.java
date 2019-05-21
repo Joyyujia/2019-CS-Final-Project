@@ -59,6 +59,11 @@ public class GameLook extends JFrame implements Lookconfig{
 		
 		jl.setVisible(true);
 		
+		JButton saveGame = new JButton("save");
+		saveGame.setFocusable(false);
+		saveGame.setBounds(320, 700, 100, 40);
+		this.add(saveGame);
+		
 		//show the remaining time
 		JLabel timeJl = new JLabel("90");
 		
@@ -80,8 +85,28 @@ public class GameLook extends JFrame implements Lookconfig{
 		
 		jl.addactionListener(gl);
 		
+		saveGame.assActionListener(gl);
 		
-		
+		int i=JOptionPane.showConfirmDialog(this, "Do you want to continue playing?", "Continue", 
+						    JOptionPane.Yes_NO_OPTION);
+        if(i==1){
+            JOptionPane.showMessageDialog(this, "please press new game to start！");
+        }else{
+            GameSave2 gs2=new GameSave2();
+            CunD c=gs2.opean();
+            if(c!=null){
+                array=c.getArray();
+                gl.setArray(array);
+                this.addMouseListener(gl);
+                this.repaint();
+                TimeOut tt =new TimeOut(timeJl, this, gl);
+                gl.setTt(tt);
+                tt.setSeconds(c.getTime());
+                tt.start();
+            }else{
+                JOptionPane.showMessageDialog(this, "failed ");
+            }
+        }
 	}
 	
 @Override
