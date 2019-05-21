@@ -191,6 +191,97 @@ public class GameListener extends MouseAdapter implements Lookconfig{ //keep tra
             }
         }
     }
+	 public void actionPerformed(ActionEvent e) {
+        String str = e.getActionCommand();
+
+        if ("New Game".equals(str)) {
+            for (int r = 0; r < array.length; r++)
+                for (int c = 0; c < array[r].length; c++)
+                    if (array[r][c] != 0) {
+                        array[r][c] = 0;
+                    }
+            if(tt!=null){
+                if(tt.isFlag()){
+                    frame.removeMouseListener(this);
+                    tt.setFlag(false);
+                }
+            }
+            randomData();
+            frame.repaint();
+            frame.addMouseListener(this);
+            // 启动线程
+            tt = new TimeOut(timeJl, frame, this);
+            if(!tt.isFlag())
+                tt.setFlag(false);
+            tt.start();
+        }
+        if ("Ranking".equals(str)) {
+            GameSave gs = new GameSave();
+            List<User> list = gs.opean();
+            for (int i = 0; i < list.size(); i++) {
+                int flag = i;
+                for (int j = i + 1; j < list.size(); j++) {
+                    if (list.get(i).getTime() > list.get(j).getTime())
+                        flag = j;
+                }
+                if (flag != i) {
+                    User u1 = list.get(i);
+                    User u2 = list.get(flag);
+                    list.set(i, u2);
+                    list.set(flag, u1);
+                }
+            }
+            JFrame jf = new JFrame();
+            jf.setTitle("Ranking");
+            jf.setDefaultCloseOperation(2);
+            jf.setSize(300, 500);
+            FlowLayout fl = new FlowLayout(FlowLayout.LEFT);
+            jf.setLayout(fl);
+            jf.setLocationRelativeTo(null);
+            for (int i = 0; i < list.size(); i++) {
+                JLabel jl = new JLabel(list.get(i).toString());
+                jl.setFont(new FontUIResource("楷体", Font.BOLD, 20));
+                jf.add(jl);
+            }
+            jf.setVisible(true);
+        }
+        if("Save".equals(str)){
+            System.out.println(23333);
+            GameSave2 gs2=new GameSave2();
+            int time=tt.getSeconds();
+            CunD c=new CunD(array, time);
+            boolean is=gs2.save(c);
+            if(is)
+                JOptionPane.showMessageDialog(frame, "successful");
+            else
+                JOptionPane.showMessageDialog(frame, "failed");
+        }
+    }
+	 public void randomData() {
+        Random random = new Random();
+        int r1, r2, c1, c2;
+        for (int i = 0; i < array.length * array[0].length / 2; i++) {
+            do {
+                r1 = random.nextInt(array.length);
+                c1 = random.nextInt(array[r1].length);
+            } while (array[r1][c1] != 0);
+            array[r1][c1] = random.nextInt(num) + 1;
+            do {
+                r2 = random.nextInt(array.length);
+                c2 = random.nextInt(array[r2].length);
+            } while (array[r2][c2] != 0);
+            array[r2][c2] = array[r1][c1];
+        }
+    }
+    //遍历数组，判断输赢
+    public boolean isWin(int[][] array) {
+        for (int r = 0; r < array.length; r++)
+            for (int c = 0; c < array[r].length; c++)
+                if (array[r][c] != 0)
+                    return false;
+        return true;
+    }
+}
 
 
 			
