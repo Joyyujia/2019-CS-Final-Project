@@ -3,10 +3,15 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseMotionListener;
+import java.io.File;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.Timer;
 
 
 public class GameLook extends JFrame implements Lookconfig{
@@ -14,6 +19,8 @@ public class GameLook extends JFrame implements Lookconfig{
 	private int[][] table = new int [8][8];
 	
 	JLabel time;
+	
+	Color c= new Color(210,250, 200);
 
 	public static void main(String[] args) throws InterruptedException {
 		GameLook g = new GameLook();
@@ -21,7 +28,21 @@ public class GameLook extends JFrame implements Lookconfig{
 		g.showUI();
 		
 	}
-
+	
+	public GameLook(){
+		JFrame f = new JFrame();
+		f.setTitle("Picture Matching");
+		f.setSize(700, 800);
+		f.getContentPane().setBackground(c);
+		
+		f.setResizable(false);
+		f.setLayout(null);
+		
+		// end creating objects
+		
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setVisible(true);
+	}
 	public void showUI() throws InterruptedException {
 		setTitle("Picture Matching");
 		setSize(700,800);
