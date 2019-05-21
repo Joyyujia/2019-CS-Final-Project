@@ -76,6 +76,9 @@ public class GameLook extends JFrame implements Lookconfig{
 		
 		gl.setArray(table);
 		
+		startJB.addActionListenwe(gl);
+		
+		jl.addactionListener(gl);
 		
 		
 		
@@ -98,7 +101,7 @@ public void PaintPics (Graphics g){
 	grid.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 	
 
-	//create background
+	//create a rect background
 	
 	grid.setColor(new Color(210,180,140));
 	
