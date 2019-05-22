@@ -40,7 +40,7 @@ public class TimeOut extends Thread {
             jl.setText(seconds + "");
             if (seconds == 0) {
                 JOptionPane.showMessageDialog(frame, "Time's out, please start a new game");
-              //  frame.removeMouseListener(gl);
+                frame.removeMouseListener(gl);
             }
             try {
                 Thread.sleep(1000);
