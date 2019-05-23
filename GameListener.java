@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.plaf.FontUIResource;
 
 
-public class GameListener extends MouseAdapter implements Lookconfig{ //keep track in the position
+public class GameListener extends MouseAdapter implements LookConfig{ //keep track in the position
 	
 	private boolean flag= true;
 	
@@ -24,11 +24,13 @@ public class GameListener extends MouseAdapter implements Lookconfig{ //keep tra
 	
 	private int x1,y1,x2,y2; // keep track in the mouse position
 	
-	private int position[][]; //save the position 
+	private int array[][]; //save the position 
 	
 	private JFrame frame; //get the data using JFrame
 	
 	private Graphics2D g;
+	
+	private JLabel JL;
 	
 	JLabel time;//showing the remaining time
 	TimeOut tt;
@@ -41,7 +43,7 @@ public class GameListener extends MouseAdapter implements Lookconfig{ //keep tra
 		return tt;
 		
 	} 
-	piblic void setIt(TimeOut tt){
+	public void setIt(TimeOut tt){
 		this.tt=tt;
 		
 	} 
@@ -105,10 +107,10 @@ public class GameListener extends MouseAdapter implements Lookconfig{ //keep tra
             y = size + r2 * (size + space) + 50;
             g.drawRect(x, y, size, size);
         }
-		 GameUtil gu = new GameUtil(this.frame);
+		 GameSettings gu = new GameSettings(this.frame);
         if (array[r1][c1] == array[r2][c2] && flag && !(r1 == r2 && c2 == c1)
                 && (array[r1][c1] != 0 || array[r2][c2] != 0)) {
-            if (gu.wuZhe(r1, c1, r2, c2, array)) {
+            if (gu.sit1(r1, c1, r2, c2, array)) {
                 array[r1][c1] = 0;
                 array[r2][c2] = 0;
                 g.setColor(Color.PINK);
@@ -117,7 +119,7 @@ public class GameListener extends MouseAdapter implements Lookconfig{ //keep tra
                                 + size / 2 + c1 * (size + space) + 40, size
                                 + size / 2 + r1 * (size + space) + 50);
 
-            } else if (gu.yiZhe(r1, c1, r2, c2, array)) {
+            } else if (gu.sit2(r1, c1, r2, c2, array)) {
                 array[r1][c1] = 0;
                 array[r2][c2] = 0;
                 g.setColor(Color.PINK);
@@ -132,7 +134,7 @@ public class GameListener extends MouseAdapter implements Lookconfig{ //keep tra
                         * space + size / 2 + c2 * (size + space) + 40, size
                         + size / 2 + r2 * (size + space) + 50);
 
-            } else if (gu.erZhe(r1, c1, r2, c2, array)) {
+            } else if (gu.sit3(r1, c1, r2, c2, array)) {
                 array[r1][c1] = 0;
                 array[r2][c2] = 0;
                 g.setColor(Color.PINK);
@@ -141,7 +143,7 @@ public class GameListener extends MouseAdapter implements Lookconfig{ //keep tra
                         + gu.getPath().get(1).x * (size + space) + 50, 2
                         * space + size / 2 + c1 * (size + space) + 40, size
                         + size / 2 + r1 * (size + space) + 50);
-                // path的下标为一的位置要减一，因为数组扩大了
+               
                 g.drawLine(2 * space + size / 2 + (gu.getPath().get(0).y - 1)
                         * (size + space) + 40, size + size / 2
                         + (gu.getPath().get(0).x - 1) * (size + space) + 50, 2
@@ -179,7 +181,7 @@ public class GameListener extends MouseAdapter implements Lookconfig{ //keep tra
                 }
             }
         }
-        //未实现消除，重绘去掉线条
+    
         if (flag) {
             Thread t=new Thread();
             try {
@@ -206,74 +208,74 @@ public class GameListener extends MouseAdapter implements Lookconfig{ //keep tra
                     tt.setFlag(false);
                 }
             }
-            randomData();
+//            randomData();
             frame.repaint();
             frame.addMouseListener(this);
-            // 启动线程
-            tt = new TimeOut(timeJl, frame, this);
+   
+            tt = new TimeOut(JL, frame, this);
             if(!tt.isFlag())
                 tt.setFlag(false);
             tt.start();
         }
         if ("Ranking".equals(str)) {
-            GameSave gs = new GameSave();
-            List<User> list = gs.opean();
-            for (int i = 0; i < list.size(); i++) {
-                int flag = i;
-                for (int j = i + 1; j < list.size(); j++) {
-                    if (list.get(i).getTime() > list.get(j).getTime())
-                        flag = j;
-                }
-                if (flag != i) {
-                    User u1 = list.get(i);
-                    User u2 = list.get(flag);
-                    list.set(i, u2);
-                    list.set(flag, u1);
+           // GameSave gs = new GameSave();
+           // List<User> list = gs.opean();
+          //  for (int i = 0; i < list.size(); i++) {
+              //  int flag = i;
+               // for (int j = i + 1; j < list.size(); j++) {
+                   // if (list.get(i).getTime() > list.get(j).getTime())
+                        //flag = j;
+              //  }
+          //      if (flag != i) {
+                    //User u1 = list.get(i);
+                  //  User u2 = list.get(flag);
+                   // list.set(i, u2);
+                   // list.set(flag, u1);
                 }
             }
-            JFrame jf = new JFrame();
-            jf.setTitle("Ranking");
-            jf.setDefaultCloseOperation(2);
-            jf.setSize(300, 500);
-            FlowLayout fl = new FlowLayout(FlowLayout.LEFT);
-            jf.setLayout(fl);
-            jf.setLocationRelativeTo(null);
-            for (int i = 0; i < list.size(); i++) {
-                JLabel jl = new JLabel(list.get(i).toString());
-                jl.setFont(new FontUIResource("楷体", Font.BOLD, 20));
-                jf.add(jl);
-            }
-            jf.setVisible(true);
-        }
-        if("Save".equals(str)){
-            System.out.println(23333);
-            GameSave2 gs2=new GameSave2();
-            int time=tt.getSeconds();
-            CunD c=new CunD(array, time);
-            boolean is=gs2.save(c);
-            if(is)
-                JOptionPane.showMessageDialog(frame, "successful");
-            else
-                JOptionPane.showMessageDialog(frame, "failed");
-        }
-    }
-	 public void randomData() {
-        Random random = new Random();
-        int r1, r2, c1, c2;
-        for (int i = 0; i < array.length * array[0].length / 2; i++) {
-            do {
-                r1 = random.nextInt(array.length);
-                c1 = random.nextInt(array[r1].length);
-            } while (array[r1][c1] != 0);
-            array[r1][c1] = random.nextInt(num) + 1;
-            do {
-                r2 = random.nextInt(array.length);
-                c2 = random.nextInt(array[r2].length);
-            } while (array[r2][c2] != 0);
-            array[r2][c2] = array[r1][c1];
-        }
-    }
-    //遍历数组，判断输赢
+//            JFrame jf = new JFrame();
+//            jf.setTitle("Ranking");
+//            jf.setDefaultCloseOperation(2);
+//            jf.setSize(300, 500);
+//            FlowLayout fl = new FlowLayout(FlowLayout.LEFT);
+//            jf.setLayout(fl);
+//            jf.setLocationRelativeTo(null);
+//            for (int i = 0; i < list.size(); i++) {
+//                JLabel jl = new JLabel(list.get(i).toString());
+//                jl.setFont(new FontUIResource("楷体", Font.BOLD, 20));
+//                jf.add(jl);
+//            }
+//            jf.setVisible(true);
+//        }
+//        if("Save".equals(str)){
+//            System.out.println(23333);
+//           // GameSave2 gs2=new GameSave2();
+//            int time=tt.getSeconds();
+//           // CunD c=new CunD(array, time);
+//          //  boolean is=gs2.save(c);
+//           // if(is)
+//              //  JOptionPane.showMessageDialog(frame, "successful");
+//           // else
+//               // JOptionPane.showMessageDialog(frame, "failed");
+//        }
+//    }
+//	 public void randomData() {
+//        Random random = new Random();
+//        int r1, r2, c1, c2;
+//        for (int i = 0; i < array.length * array[0].length / 2; i++) {
+//            do {
+//                r1 = random.nextInt(array.length);
+//                c1 = random.nextInt(array[r1].length);
+//            } while (array[r1][c1] != 0);
+//            array[r1][c1] = random.nextInt(num) + 1;
+//            do {
+//                r2 = random.nextInt(array.length);
+//                c2 = random.nextInt(array[r2].length);
+//            } while (array[r2][c2] != 0);
+//            array[r2][c2] = array[r1][c1];
+//        }
+//    }
+
     public boolean isWin(int[][] array) {
         for (int r = 0; r < array.length; r++)
             for (int c = 0; c < array[r].length; c++)
@@ -281,17 +283,3 @@ public class GameListener extends MouseAdapter implements Lookconfig{ //keep tra
                     return false;
         return true;
     }
-}
-
-
-			
-			
-		}
-		
-	}
-	
-
-
-	
-
-}
