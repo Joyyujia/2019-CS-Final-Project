@@ -1,4 +1,3 @@
-
 import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Component;
@@ -34,49 +33,44 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 	
 	Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();
 	
-    private int[][] table = new int [8][8];
-	
 	JLabel time;
 	
 	Color c= new Color(210,250, 200);
-
-	JLabel label_lives = new JLabel("monster_lives");
-	JLabel label_result= new JLabel("monster_lives");
 	
-   
-	
-	
+	Table table = new Table("Table.png");
+	//create an array of shooky
+	JK[] shooky = new JK[2];
+	JK jk = new JK("JK.png");
+	Mang mang = new Mang("Mang.png");
 	// only do drawing for paint
 	public void paint(Graphics g) {
 		super.paintComponent(g);
 		
 		g.setColor(new Color(10,180,140));
 		
-		table(g);
-		
-		//http://www.java2s.com/Code/Java/2D-Graphics-GUI/DrawrectanglesusethedrawRectmethodTofillrectanglesusethefillRectmethod.htm
 		
 	}
-	
-	public void table(Graphics g){
-		g.fillRoundRect(0, 0, space+(size+space)*table[0].length,space+(size+space)*table[0].length, arc,arc);
-		//draw the grid
-		
-		g.setColor(new Color(245,245, 200));
-		
-		for(int r=0; r< table.length; r++){
-			
-			for(int c=0; c<table[r].length; c++){
+	public void equal(){
+		for(int i =0; i<8; i++){
+			for(int j =0; j<8; j++){
 				
-			   g.fillRect(space+(space+size)*r,space+(space+size)*c , size, size);
-
-	       }
-
-	
+			}
+		}
+		for(int i=0; i<10000000; i++){
+			int c= jk.nextInt(arc-3)+1;
+			int d= jk.nextInt(arc-3)+1;
+			int f= jk.nextInt(arc-3)+1;
+			int g= jk.nextInt(arc-3)+1;
+			int h= jk.nextInt(arc-3)+1;
+			if(lookarray[c][d]==&&lookarray[f][g]==0){
+				lookarray[c][d]=h;
+				lookarray[f][g]=h;
+				
+			}
+			
 		}
 	}
-
-
+	
 	
 	
 	
@@ -109,25 +103,13 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 		f.setVisible(true);
 		
 		
-		
         JButton startJB = new JButton("START");
 		
 		startJB.setBounds(30,700,100,40);
 		
-		
 		startJB.setFocusable(false);
 		
-		
 		f.add(startJB);
-		
-		//rank
-		
-		JButton rank = new JButton("Rank");
-		rank.setFocusable(false);
-		
-		rank.setBounds(30,50,100,40);
-		
-		f.add(rank);
 		
 		//show time button
 		JLabel jl = new JLabel("Time:");
@@ -138,10 +120,7 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 		
 		jl.setVisible(true);
 		
-		JButton saveGame = new JButton("save");
-		saveGame.setFocusable(false);
-		saveGame.setBounds(320, 700, 100, 40);
-		this.add(saveGame);
+		
 		
 		//show the remaining time
 		JLabel timeJl = new JLabel("90");
@@ -153,10 +132,22 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 		timeJl.setVisible(true);
 		
 		
-        
-	}
+		
+	    for (int i = 0; i < 2; i++) {
+		    shooky[i] = new JK("JK.png");
+			shooky[i].setX(jk.getX() +i * size + i * space);
+			f.add(jk.getImg());
 
+		}
+	    f.add(mang.getImg());
+	    
+	
+	    f.add(table.getImg());
+		
+	}
+		
 	Timer t;
+	
 	
 
 		
