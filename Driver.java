@@ -33,16 +33,24 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 	
 	Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();
 	
-	JLabel time;
+	int countTime=90;
+	int secondTimer = 0;
+	JLabel time= new JLabel ("countTime");
 	
 	Color c= new Color(210,250, 200);
 	
-	Table table = new Table("Table.png");
+	Table table = new Table("6x7 table.png");
 	//create an array of shooky
 	JK[] shooky = new JK[2];
 	JK jk = new JK("JK.png");
 	Mang mang = new Mang("Mang.png");
-	// only do drawing for paint
+	RJ rj = new RJ ("RJ.png");
+	Squirrel squirrel = new Squirrel("Squirrel.png");
+	TATA tata = new TATA ("TATA.png");
+	puppy puppy = new puppy("puppy.png");
+	
+	
+	
 	public void paint(Graphics g) {
 		super.paintComponent(g);
 		
@@ -50,28 +58,26 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 		
 		
 	}
-	public void equal(){
-		for(int i =0; i<8; i++){
-			for(int j =0; j<8; j++){
-				
-			}
-		}
-		for(int i=0; i<10000000; i++){
-			int c= jk.nextInt(arc-3)+1;
-			int d= jk.nextInt(arc-3)+1;
-			int f= jk.nextInt(arc-3)+1;
-			int g= jk.nextInt(arc-3)+1;
-			int h= jk.nextInt(arc-3)+1;
-			if(lookarray[c][d]==&&lookarray[f][g]==0){
-				lookarray[c][d]=h;
-				lookarray[f][g]=h;
-				
-			}
-			
-		}
+	
+	
+	public void update(){
+		secondTimer+=17; //update is being called every 17ms so time has to go up by 17ms
+		
+		 if(secondTimer>=1000){
+			 countTime--;
+			 secondTimer=0; //reset second counter
+		 }
+		 for(int count=90; count>=0; count--){
+				time.setText("Count Down: " + countTime+" " );
+	      }
+	      if(countTime==0){
+	    	  
+	    	  t.stop();
+	    	  
+	      }
+	      
+		
 	}
-	
-	
 	
 	
 	
@@ -80,7 +86,7 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		
+		update();
 		repaint();
 	}
 
@@ -109,43 +115,77 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 		
 		startJB.setFocusable(false);
 		
+		
+		
+		
 		f.add(startJB);
-		
-		//show time button
-		JLabel jl = new JLabel("Time:");
-		
-		jl.setBounds(440,700,80,50);
-		
-		f.add(jl);
-		
-		jl.setVisible(true);
-		
 		
 		
 		//show the remaining time
-		JLabel timeJl = new JLabel("90");
 		
-		timeJl.setBounds(520,700,80,50);
-		
-		f.add(timeJl);
-		
-		timeJl.setVisible(true);
+		time.setText("Count-Down: "+ countTime);
 		
 		
+		time.setBounds(520,700,180,50);
 		
-	    for (int i = 0; i < 2; i++) {
-		    shooky[i] = new JK("JK.png");
-			shooky[i].setX(jk.getX() +i * size + i * space);
-			f.add(jk.getImg());
-
+		f.add(time);
+		
+		time.setVisible(true);
+		
+		
+		for(int cols =0; cols< 6; cols++){
+			for(int rows=0; rows< 7; rows++){
+				
+			}
 		}
+//	    for (int i = 0; i < 2; i++) {
+////		    shooky[i] = new JK("JK.png");
+//			shooky[i].setX(jk.getX() +i * size + i * space);
+//			f.add(jk.getImg());
+//
+//		}
+		
 	    f.add(mang.getImg());
 	    
 	
 	    f.add(table.getImg());
-		
+	    
+		t = new Timer(17, this);
+		// add a listener for startBUTTON
+				startJB.addMouseListener(new MouseListener(){
+
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void mouseEntered(MouseEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void mouseExited(MouseEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void mousePressed(MouseEvent arg0) {
+						// TODO Auto-generated method stub
+						t.start();
+					}
+
+					@Override
+					public void mouseReleased(MouseEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}});
 	}
 		
+
 	Timer t;
 	
 	
