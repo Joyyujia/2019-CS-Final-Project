@@ -282,6 +282,94 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		if (flag) {
+			x1 = e.getX() - 40;
+			y1 = e.getY() - 50;
+			flag = false;
+			if (y1 / (size + space) - 1 >= array.length)
+				r1 = array.length - 1;
+			else if (y1 / (size + space) - 1 < 0)
+				r1 = 0;
+			else
+				r1 = y1 / (size + space) - 1;
+			if (x1 / (size + space) >= array[0].length)
+				c1 = array[0].length - 1;
+			else
+				c1 = x1 / (size + space);
+			g.setColor(Color.RED);
+			g.setStroke(new BasicStroke(5));
+			x = space + space + c1 * (size + space) + 40;
+			y = size + r1 * (size + space) + 50;
+			g.drawRect(x, y, size, size);
+		} else {
+			x2 = e.getX() - 40;
+			y2 = e.getY() - 50;
+			flag = true;
+			if (y2 / (size + space) - 1 >= array.length)
+				r2 = array.length - 1;
+			else if (y1 / (size + space) - 1 < 0)
+				r1 = 0;
+			else
+				r2 = y2 / (size + space) - 1;
+			if (x2 / (size + space) >= array[0].length)
+				c2 = array[0].length - 1;
+			else
+				c2 = x2 / (size + space);
+			g.setColor(Color.RED);
+			g.setStroke(new BasicStroke(4));
+			x = space + space + c2 * (size + space) + 40;
+			y = size + r2 * (size + space) + 50;
+			g.drawRect(x, y, size, size);
+		}
+		GameSetting gs = new GameSetting(this.frame);
+		if (array[r1][c1] == array[r2][c2] && flag && !(r1 == r2 && c2 == c1)
+				&& (array[r1][c1] != 0 || array[r2][c2] != 0)) {
+			if (gs.sit1(r1, c1, r2, c2, array)) {
+				array[r1][c1] = 0;
+				array[r2][c2] = 0;
+				g.setColor(Color.PINK);
+				g.drawLine(2 * space + size / 2 + c2 * (size + space) + 40,
+						size + size / 2 + r2 * (size + space) + 50, 2 * space
+								+ size / 2 + c1 * (size + space) + 40, size
+								+ size / 2 + r1 * (size + space) + 50);
+
+			} else if (gs.sit2(r1, c1, r2, c2, array)) {
+				array[r1][c1] = 0;
+				array[r2][c2] = 0;
+				g.setColor(Color.PINK);
+				g.drawLine(2 * space + size / 2 + gu.getPath().get(0).y
+						* (size + space) + 40, size + size / 2
+						+ gu.getPath().get(0).x * (size + space) + 50, 2
+						* space + size / 2 + c1 * (size + space) + 40, size
+						+ size / 2 + r1 * (size + space) + 50);
+				g.drawLine(2 * space + size / 2 + gu.getPath().get(0).y
+						* (size + space) + 40, size + size / 2
+						+ gu.getPath().get(0).x * (size + space) + 50, 2
+						* space + size / 2 + c2 * (size + space) + 40, size
+						+ size / 2 + r2 * (size + space) + 50);
+
+			} else if (gs.sit3(r1, c1, r2, c2, array)) {
+				array[r1][c1] = 0;
+				array[r2][c2] = 0;
+				g.setColor(Color.PINK);
+				g.drawLine(2 * space + size / 2 + gu.getPath().get(1).y
+						* (size + space) + 40, size + size / 2
+						+ gu.getPath().get(1).x * (size + space) + 50, 2
+						* space + size / 2 + c1 * (size + space) + 40, size
+						+ size / 2 + r1 * (size + space) + 50);
+				
+				g.drawLine(2 * space + size / 2 + (gu.getPath().get(0).y - 1)
+						* (size + space) + 40, size + size / 2
+						+ (gu.getPath().get(0).x - 1) * (size + space) + 50, 2
+						* space + size / 2 + gu.getPath().get(1).y
+						* (size + space) + 40, size + size / 2
+						+ gu.getPath().get(1).x * (size + space) + 50);
+				g.drawLine(2 * space + size / 2 + (gu.getPath().get(0).y - 1)
+						* (size + space) + 40, size + size / 2
+						+ (gu.getPath().get(0).x - 1) * (size + space) + 50, 2
+						* space + size / 2 + c2 * (size + space) + 40, size
+						+ size / 2 + r2 * (size + space) + 50);
+			}
 	
 
 
