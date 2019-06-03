@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -41,14 +42,10 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 	
 	Table table = new Table("6x7 table.png");
 	//create an array of shooky
-	JK[] shooky = new JK[2];
-	JK jk = new JK("JK.png");
-	Mang mang = new Mang("Mang.png");
-	RJ rj = new RJ ("RJ.png");
-	Squirrel squirrel = new Squirrel("Squirrel.png");
-	TATA tata = new TATA ("TATA.png");
-	puppy puppy = new puppy("puppy.png");
 	
+	Picture[][] pics= new Picture[6][7];
+	
+	Picture test = new Picture("puppy.png");
 	
 	
 	public void paint(Graphics g) {
@@ -79,9 +76,6 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 		
 	}
 	
-	
-	
-
 	
 
 	@Override
@@ -115,9 +109,6 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 		
 		startJB.setFocusable(false);
 		
-		
-		
-		
 		f.add(startJB);
 		
 		
@@ -133,21 +124,82 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 		time.setVisible(true);
 		
 		
-		for(int cols =0; cols< 6; cols++){
-			for(int rows=0; rows< 7; rows++){
-				
+		/*for(int i =0; i< 7; i++){
+			int r=(int)(Math.random()*6);
+			int c=(int)(Math.random()*7);
+			pics[r][c] = new Picture ("JK.png");
+			pics[r][c].setX(pics[r][c].getX() +r * (size + space));
+			pics[r][c].setY(pics[r][c].getY() +c * (size + space));
+			
+			if(pics[r][c]==null){
+				f.add(pics[r][c].getImg());
 			}
+			
+			
 		}
-//	    for (int i = 0; i < 2; i++) {
-////		    shooky[i] = new JK("JK.png");
-//			shooky[i].setX(jk.getX() +i * size + i * space);
-//			f.add(jk.getImg());
-//
-//		}
 		
-	    f.add(mang.getImg());
-	    
-	
+		for(int i =0; i< 7; i++){
+			int r=(int)(Math.random()*6);
+			int c=(int)(Math.random()*7);
+			pics[r][c] = new Picture ("mang.png");
+			pics[r][c].setX(pics[r][c].getX() +r * (size + space));
+			pics[r][c].setY(pics[r][c].getY() +c * (size + space));
+			if(pics[r][c]==null){
+				f.add(pics[r][c].getImg());
+			}
+			
+		}
+		
+		for(int i =0; i< 7; i++){
+			int r=(int)(Math.random()*6);
+			int c=(int)(Math.random()*7);
+			pics[r][c] = new Picture ("puppy.png");
+			pics[r][c].setX(pics[r][c].getX() +r * (size + space));
+			pics[r][c].setY(pics[r][c].getY() +c * (size + space));
+			if(pics[r][c]==null){
+				f.add(pics[r][c].getImg());
+			}
+			
+		}
+		
+		for(int i =0; i< 7; i++){
+			int r=(int)(Math.random()*6);
+			int c=(int)(Math.random()*7);
+			pics[r][c] = new Picture ("RJ.png");
+			pics[r][c].setX(pics[r][c].getX() +r * (size + space));
+			pics[r][c].setY(pics[r][c].getY() +c * (size + space));
+			if(pics[r][c]==null){
+				f.add(pics[r][c].getImg());
+			}
+			
+		}
+		
+		for(int i =0; i< 7; i++){
+			int r=(int)(Math.random()*6);
+			int c=(int)(Math.random()*7);
+			pics[r][c] = new Picture ("TATA.png");
+			pics[r][c].setX(pics[r][c].getX() +r * (size + space));
+			pics[r][c].setY(pics[r][c].getY() +c * (size + space));
+			if(pics[r][c]==null){
+				f.add(pics[r][c].getImg());
+			}
+			
+		}
+		
+		for(int i =0; i< 7; i++){
+			int r=(int)(Math.random()*6);
+			int c=(int)(Math.random()*7);
+			pics[r][c] = new Picture ("Squirrel.png");
+			pics[r][c].setX(pics[r][c].getX() +r * (size + space));
+			pics[r][c].setY(pics[r][c].getY() +c * (size + space));
+			if(pics[r][c]==null){
+				f.add(pics[r][c].getImg());
+			}
+			
+		}*/
+
+		f.add(test.getImg());
+	  
 	    f.add(table.getImg());
 	    
 		t = new Timer(17, this);
@@ -174,7 +226,7 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 
 					@Override
 					public void mousePressed(MouseEvent arg0) {
-						// TODO Auto-generated method stub
+						
 						t.start();
 					}
 
@@ -225,7 +277,7 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 	}
 
 	public void reset() {
-
+		
 	}
 
 	@Override
