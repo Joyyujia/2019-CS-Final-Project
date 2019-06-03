@@ -33,7 +33,11 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 	// properties of this class - the panel that shows up
 	
 	Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();
-	
+	private boolean flag = true;
+	private int r1, c1, r2, c2;//complement to the array
+	private int x1, y1, x2, y2;
+	private int array[][];
+			
 	int countTime=90;
 	int secondTimer = 0;
 	JLabel time= new JLabel ("countTime");
@@ -370,6 +374,24 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 						* space + size / 2 + c2 * (size + space) + 40, size
 						+ size / 2 + r2 * (size + space) + 50);
 			}
+			Thread t=new Thread();
+			try {
+				t.sleep(100);
+				frame.repaint();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			if (flag) {
+			Thread t=new Thread();
+			try {
+				t.sleep(100);
+				frame.repaint();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 	
 
 
