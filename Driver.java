@@ -1,9 +1,11 @@
 import java.applet.Applet;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -37,25 +39,32 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 	private int r1, c1, r2, c2;//complement to the array
 	private int x1, y1, x2, y2;
 	private int array[][];
+	private JFrame frame;
 			
-	int countTime=90;//set the timer on the screen
-	int secondTimer = 0;//set the second timer runing at the background
-	JLabel time= new JLabel ("countTime");//add JLabel to add countTime
+	int countTime=45;
+	int secondTimer = 0;
+	JLabel time= new JLabel ("countTime");
 	
 	Color c= new Color(210,250, 200);
 	
-	Table table = new Table("6x7 table.png");//add the table background
+	Table table = new Table("6x7 table.png");
 	//create an array of shooky
 	
 	Picture[][] pics= new Picture[6][7];
 	
 	Picture test = new Picture("puppy.png");
 	
+	GameOver go = new GameOver("Result.jpg");
+	
+	Instructions instruction = new Instructions("Instruction Page.png");
+	
+	Graphics2D g;
+	private int x, y;
 	
 	public void paint(Graphics g) {
 		super.paintComponent(g);
 		
-		g.setColor(new Color(10,180,140));//set the color of the panel 
+		g.setColor(new Color(10,180,140));
 		
 		
 	}
@@ -73,7 +82,9 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 	      }
 	      if(countTime==0){
 	    	  
-	    	  t.stop();//make the timer stop when reaches 0
+	    	  t.stop();
+	    	  go.getImg().setVisible(true);
+	    	  table.getImg().setVisible(false);
 	    	  
 	      }
 	      
@@ -202,9 +213,17 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 			
 		}*/
 
+		f.add(instruction.getImg());
+		
 		f.add(test.getImg());
 	  
+		table.getImg().setVisible(false);
 	    f.add(table.getImg());
+	    
+	    go.getImg().setVisible(false);
+	    f.add(go.getImg());
+	    
+	    
 	    
 		t = new Timer(17, this);
 		// add a listener for startBUTTON
@@ -232,6 +251,10 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 					public void mousePressed(MouseEvent arg0) {
 						
 						t.start();
+						
+						table.getImg().setVisible(true);
+						
+						instruction.getImg().setVisible(false);
 					}
 
 					@Override
@@ -341,14 +364,14 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 				array[r1][c1] = 0;
 				array[r2][c2] = 0;
 				g.setColor(Color.PINK);
-				g.drawLine(2 * space + size / 2 + gu.getPath().get(0).y
+				g.drawLine(2 * space + size / 2 + gs.getPath().get(0).y
 						* (size + space) + 40, size + size / 2
-						+ gu.getPath().get(0).x * (size + space) + 50, 2
+						+ gs.getPath().get(0).x * (size + space) + 50, 2
 						* space + size / 2 + c1 * (size + space) + 40, size
 						+ size / 2 + r1 * (size + space) + 50);
-				g.drawLine(2 * space + size / 2 + gu.getPath().get(0).y
+				g.drawLine(2 * space + size / 2 + gs.getPath().get(0).y
 						* (size + space) + 40, size + size / 2
-						+ gu.getPath().get(0).x * (size + space) + 50, 2
+						+ gs.getPath().get(0).x * (size + space) + 50, 2
 						* space + size / 2 + c2 * (size + space) + 40, size
 						+ size / 2 + r2 * (size + space) + 50);
 
@@ -356,41 +379,42 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 				array[r1][c1] = 0;
 				array[r2][c2] = 0;
 				g.setColor(Color.PINK);
-				g.drawLine(2 * space + size / 2 + gu.getPath().get(1).y
+				g.drawLine(2 * space + size / 2 + gs.getPath().get(1).y
 						* (size + space) + 40, size + size / 2
-						+ gu.getPath().get(1).x * (size + space) + 50, 2
+						+ gs.getPath().get(1).x * (size + space) + 50, 2
 						* space + size / 2 + c1 * (size + space) + 40, size
 						+ size / 2 + r1 * (size + space) + 50);
 				
-				g.drawLine(2 * space + size / 2 + (gu.getPath().get(0).y - 1)
+				g.drawLine(2 * space + size / 2 + (gs.getPath().get(0).y - 1)
 						* (size + space) + 40, size + size / 2
-						+ (gu.getPath().get(0).x - 1) * (size + space) + 50, 2
-						* space + size / 2 + gu.getPath().get(1).y
+						+ (gs.getPath().get(0).x - 1) * (size + space) + 50, 2
+						* space + size / 2 + gs.getPath().get(1).y
 						* (size + space) + 40, size + size / 2
-						+ gu.getPath().get(1).x * (size + space) + 50);
-				g.drawLine(2 * space + size / 2 + (gu.getPath().get(0).y - 1)
+						+ gs.getPath().get(1).x * (size + space) + 50);
+				g.drawLine(2 * space + size / 2 + (gs.getPath().get(0).y - 1)
 						* (size + space) + 40, size + size / 2
-						+ (gu.getPath().get(0).x - 1) * (size + space) + 50, 2
+						+ (gs.getPath().get(0).x - 1) * (size + space) + 50, 2
 						* space + size / 2 + c2 * (size + space) + 40, size
 						+ size / 2 + r2 * (size + space) + 50);
 			}
 			Thread t=new Thread();
 			try {
-				t.sleep(100);
-				frame.repaint();
+				Thread.sleep(100);
+				//frame.repaint();
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			if (flag) {
-			Thread t=new Thread();
+			Thread t1=new Thread();
 			try {
-				t.sleep(100);
+				Thread.sleep(100);
 				frame.repaint();
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+		}
 		}
 	
 
