@@ -38,13 +38,13 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 	private int x1, y1, x2, y2;
 	private int array[][];
 			
-	int countTime=90;
-	int secondTimer = 0;
-	JLabel time= new JLabel ("countTime");
+	int countTime=90;//set the timer on the screen
+	int secondTimer = 0;//set the second timer runing at the background
+	JLabel time= new JLabel ("countTime");//add JLabel to add countTime
 	
 	Color c= new Color(210,250, 200);
 	
-	Table table = new Table("6x7 table.png");
+	Table table = new Table("6x7 table.png");//add the table background
 	//create an array of shooky
 	
 	Picture[][] pics= new Picture[6][7];
@@ -55,7 +55,7 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 	public void paint(Graphics g) {
 		super.paintComponent(g);
 		
-		g.setColor(new Color(10,180,140));
+		g.setColor(new Color(10,180,140));//set the color of the panel 
 		
 		
 	}
@@ -73,7 +73,7 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 	      }
 	      if(countTime==0){
 	    	  
-	    	  t.stop();
+	    	  t.stop();//make the timer stop when reaches 0
 	    	  
 	      }
 	      
