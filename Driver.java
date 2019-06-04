@@ -86,6 +86,12 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 	    	  go.getImg().setVisible(true);
 	    	  table.getImg().setVisible(false);
 	    	  
+	    	  for(int r=0; r<6;r++){
+	    		  for(int c=0;c<7;c++){
+	    			  pics[r][c].getImg().setVisible(false);
+	    		  }
+	    	  }
+	    	  
 	      }
 	      
 		
@@ -139,84 +145,119 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 		time.setVisible(true);
 		
 		
-		/*for(int i =0; i< 7; i++){
+	for(int i =0; i< 6; i++){
 			int r=(int)(Math.random()*6);
 			int c=(int)(Math.random()*7);
+			
+			while(pics[r][c]!=null){
+				 r=(int)(Math.random()*6);
+				 c=(int)(Math.random()*7);
+				
+			}
+			
 			pics[r][c] = new Picture ("JK.png");
 			pics[r][c].setX(pics[r][c].getX() +r * (size + space));
 			pics[r][c].setY(pics[r][c].getY() +c * (size + space));
 			
-			if(pics[r][c]==null){
+			
+			
 				f.add(pics[r][c].getImg());
-			}
+	
 			
 			
 		}
 		
-		for(int i =0; i< 7; i++){
+		for(int i =0; i< 6; i++){
 			int r=(int)(Math.random()*6);
 			int c=(int)(Math.random()*7);
+			while(pics[r][c]!=null){
+				 r=(int)(Math.random()*6);
+				 c=(int)(Math.random()*7);
+				 
+			}
+			
 			pics[r][c] = new Picture ("mang.png");
 			pics[r][c].setX(pics[r][c].getX() +r * (size + space));
 			pics[r][c].setY(pics[r][c].getY() +c * (size + space));
-			if(pics[r][c]==null){
+			
 				f.add(pics[r][c].getImg());
-			}
+			
 			
 		}
 		
-		for(int i =0; i< 7; i++){
+		for(int i =0; i< 8; i++){
 			int r=(int)(Math.random()*6);
 			int c=(int)(Math.random()*7);
+			while(pics[r][c]!=null){
+				 r=(int)(Math.random()*6);
+				 c=(int)(Math.random()*7);
+				 
+			}
 			pics[r][c] = new Picture ("puppy.png");
 			pics[r][c].setX(pics[r][c].getX() +r * (size + space));
 			pics[r][c].setY(pics[r][c].getY() +c * (size + space));
-			if(pics[r][c]==null){
+			
 				f.add(pics[r][c].getImg());
-			}
+			
 			
 		}
 		
-		for(int i =0; i< 7; i++){
+		for(int i =0; i< 8; i++){
 			int r=(int)(Math.random()*6);
 			int c=(int)(Math.random()*7);
+			while(pics[r][c]!=null){
+				 r=(int)(Math.random()*6);
+				 c=(int)(Math.random()*7);
+				 
+			}
 			pics[r][c] = new Picture ("RJ.png");
 			pics[r][c].setX(pics[r][c].getX() +r * (size + space));
 			pics[r][c].setY(pics[r][c].getY() +c * (size + space));
-			if(pics[r][c]==null){
+			
 				f.add(pics[r][c].getImg());
-			}
+			
 			
 		}
 		
-		for(int i =0; i< 7; i++){
+		for(int i =0; i< 6; i++){
 			int r=(int)(Math.random()*6);
 			int c=(int)(Math.random()*7);
+			while(pics[r][c]!=null){
+				 r=(int)(Math.random()*6);
+				 c=(int)(Math.random()*7);
+				 
+			}
 			pics[r][c] = new Picture ("TATA.png");
 			pics[r][c].setX(pics[r][c].getX() +r * (size + space));
 			pics[r][c].setY(pics[r][c].getY() +c * (size + space));
-			if(pics[r][c]==null){
+		
 				f.add(pics[r][c].getImg());
-			}
+			
 			
 		}
 		
-		for(int i =0; i< 7; i++){
+		for(int i =0; i< 6; i++){
 			int r=(int)(Math.random()*6);
 			int c=(int)(Math.random()*7);
+			while(pics[r][c]!=null){
+				 r=(int)(Math.random()*6);
+				 c=(int)(Math.random()*7);
+				 
+			}
 			pics[r][c] = new Picture ("Squirrel.png");
 			pics[r][c].setX(pics[r][c].getX() +r * (size + space));
 			pics[r][c].setY(pics[r][c].getY() +c * (size + space));
-			if(pics[r][c]==null){
-				f.add(pics[r][c].getImg());
-			}
 			
-		}*/
-
+				f.add(pics[r][c].getImg());
+			
+			
+		}
+		
+		
+        instruction.getImg().setVisible(true);
 		f.add(instruction.getImg());
 		
-		f.add(test.getImg());
-	  
+		
 		table.getImg().setVisible(false);
 	    f.add(table.getImg());
 	    
