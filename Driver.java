@@ -143,7 +143,7 @@ public class Driver extends JPanel implements Lookconfig, ActionListener, KeyLis
 		f.add(time);
 		
 		time.setVisible(true);
-		
+		f.addMouseListener(this);
 		
 	for(int i =0; i< 6; i++){
 			int r=(int)(Math.random()*6);
