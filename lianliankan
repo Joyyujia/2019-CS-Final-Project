@@ -72,7 +72,7 @@ public class lianliankan implements ActionListener
 	
 	public void init()
 	  { //create the mainFrame and name it picture match
-		mainFrame=new JFrame("picture match"); 	
+		mainFrame=new JFrame("Picture Matching"); 	
 		thisContainer = mainFrame.getContentPane(); 
 //		thisContainer.setBackground(c);
 		/**
