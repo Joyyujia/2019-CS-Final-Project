@@ -1,0 +1,680 @@
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+public class Driver2 implements ActionListener 
+{ 
+	//main frame
+	JFrame mainFrame;	  
+	//container for mianFrame
+	Container thisContainer; 
+	
+	//side Panel
+	JPanel centerPanel,southPanel,northPanel,westPanel,eastPanel;
+	
+	//games button array
+	JButton diamondsButton[][] = new JButton[6][5];
+	
+	//buttons for start, exit and rearrange
+	JButton exitButton,resetButton,newlyButton;
+    //	JButton startButton;
+	//label for scores
+	JLabel fractionLable=new JLabel("0");
+	//label for time
+	JLabel time=new JLabel("");
+	
+	//use these two JButton to record two selected Buttons(pics)
+    JButton fristButton,secondButton;
+     
+    //save the location for buttons(pics)
+    int grid[][] = new int[8][7]; 
+    
+    //Judge if the button is pressed or not
+    static boolean pressInformation=false;
+    //coordinates for two selected buttons(pics)
+    //x0, y0; x, y
+    int x0=0,y0=0,x=0,y=0;
+    
+    //the complement numbers on two selected buttons
+	int fristMsg=0,secondMsg=0;
+	int i,j,k,n;
+//	int s=0;
+	
+	final Timer t=new Timer();
+	Color o=Color.orange;
+	Color c=Color.cyan;
+	Color p=Color.pink;
+//	Color c=Color.blue;
+	boolean flag;
+	
+	Table table = new Table ("6x7 table.png");
+	
+    GameOver go = new GameOver("Result.jpg");
+	
+	Instructions instruction = new Instructions("Instruction Page.png");
+	
+	public void init()
+	  { //create the mainFrame and name it picture match
+		mainFrame=new JFrame(); 	
+		mainFrame.setTitle("Picture Matching");
+		mainFrame.setSize(700, 800);
+		thisContainer = mainFrame.getContentPane(); 
+//		thisContainer.setBackground(c);
+		/**
+		 * divide thisContainerto 3 sections
+		 * Center, South & North
+		 * add score in North Section
+		 * add pic buttons in Center section
+		 * add buttons of rearrange , exit, and next
+		 */
+		thisContainer.setLayout(new BorderLayout()); 
+		centerPanel=new JPanel();
+		centerPanel.setBackground(o);//set the background orange
+		southPanel=new JPanel();
+		southPanel.setBackground(c);//set the background of south panel cyan
+		northPanel=new JPanel(new BorderLayout() ); 
+//		northPanel.setBackground(m);
+		westPanel=new JPanel();
+		westPanel.setBackground(p);//set the background of westpanel pink
+		eastPanel=new JPanel();
+		eastPanel.setBackground(p);//set the background of the westpanel pink
+//		Label time=new Label("time left：");
+		thisContainer.add(centerPanel,"Center"); 
+		thisContainer.add(southPanel,"South"); 
+		thisContainer.add(northPanel,"North"); 
+		northPanel.add(westPanel,"West");
+		northPanel.add(eastPanel,"Center");
+		westPanel.add(BorderLayout.WEST,new JLabel("               Time Left:"));//add the label of timer
+		westPanel.add(BorderLayout.EAST,time);
+		eastPanel.add(BorderLayout.CENTER,new JLabel("Your Score:"));//add the label of score
+		eastPanel.add(BorderLayout.EAST,fractionLable);
+		eastPanel.add(fractionLable,"Center");
+//		northPanel.add(fractionLable); 
+    /** 		
+      * eastPanel.add(new JLabel("Your Score:"));
+      * eastPanel.add(fractionLable);
+	  * westPanel.add(BorderLayout.WEST,new JLabel("             Time Left:"));
+	  *	westPanel.add(BorderLayout.EAST,new JLabel(time));
+	  * northPanel.add(westPanel); 
+	  */
+		//set the section of the center panel to be table-like
+		centerPanel.setLayout(new GridLayout(6,5)); 
+		for(int cols = 0;cols < 6;cols++)
+		  { 
+			for(int rows = 0;rows < 5;rows++ )
+			  { 
+				if(grid[cols+1][rows+1]!=0)
+				  {
+					//add pics to buttons 
+					diamondsButton[cols][rows]=createImgBtn(grid[cols+1][rows+1]+".jpg", String.valueOf(grid[cols+1][rows+1]));
+				  }
+				else
+				  {
+					//when the buttons are null, the picture is null
+				    diamondsButton[cols][rows]=createImgBtn("",String.valueOf(grid[cols+1][rows+1]));
+				  }
+            /**			
+            *	else
+			*	  {
+			*when the selected button is null, defined it as a new button
+			*		diamondsButton[cols][rows]=new JButton();
+			*	  }
+            */
+				diamondsButton[cols][rows].addActionListener(this); 
+				centerPanel.add(diamondsButton[cols][rows]); 
+			  } 
+		   }
+//		startButton=new JButton("Start");
+//		startButton.addActionListener(this);
+		exitButton=new JButton("Exit"); 
+		exitButton.addActionListener(this); 
+		resetButton=new JButton("Rearrange"); 
+		resetButton.addActionListener(this); 
+		newlyButton=new JButton("Next"); 
+		newlyButton.addActionListener(this);
+//		southPanel.add(startButton);
+		southPanel.add(exitButton); 
+		southPanel.add(resetButton); 
+		southPanel.add(newlyButton); 
+		
+		fractionLable.setText(String.valueOf(Integer.parseInt(fractionLable.getText()))); 
+		mainFrame.setBounds(180,10,800,650);//set the size for the main panel
+		mainFrame.setVisible(false);
+		mainFrame.setVisible(true); 
+		mainFrame.add(table.getImg());
+		mainFrame.add(go.getImg());
+		mainFrame.add(instruction.getImg());
+//		centerPanel.setVisible(false);
+//		timerDemo();
+		
+	  } 
+	
+	//create buttons with pics 
+	public JButton createImgBtn(String ing,String txt)
+	  {
+		//create an ImageIcon regarding to the named resources
+		ImageIcon image = new ImageIcon(getClass().getResource(ing));
+		JButton button = new JButton(txt,image);
+		//set the num at the bottom vertical of the pics
+		button.setVerticalTextPosition(JButton.BOTTOM);
+		button.setHorizontalTextPosition(JButton.CENTER);
+		return button;
+	  }
+	
+	/**
+	 *generate random numbers
+	 *two numbers should be equal to each other
+	 */
+	public void randomBuild() 
+	  { 
+		int randoms,cols,rows; 
+		for(int twins=1;twins<=15;twins++) 
+		  { 
+			randoms=(int)(Math.random()*25+1);//pick a random number from 1-25
+			for(int i=1;i<=2;i++) 
+			  { //generate a random coordinate
+				cols=(int)(Math.random()*6+1); 
+				rows=(int)(Math.random()*5+1); 
+				while(grid[cols][rows]!=0)
+				  { 
+					cols=(int)(Math.random()*6+1); 
+					rows=(int)(Math.random()*5+1); 
+				  } 
+				this.grid[cols][rows]=randoms; 
+			   } 
+		   } 
+	  } 
+	
+	//record score
+	public void fraction()
+	{ 
+		fractionLable.setText(String.valueOf(Integer.parseInt(fractionLable.getText())+100)); 
+	} 
+	
+	//reload
+	public void reload()
+	  { 
+		int save[] = new int[30]; 
+		int n=0,cols,rows; 
+		int grid[][]= new int[8][7];
+
+		for(int i=0;i<=6;i++) 
+		   { 
+			for(int j=0;j<=5;j++) 
+			  { 
+				if(this.grid[i][j]!=0) 
+				  { //save the remaining pics
+					save[n]=this.grid[i][j]; 
+					n++; 
+				  } 
+			  } 
+		   } 
+		n=n-1; 
+		this.grid=grid; //set every num in grid to 0
+		while(n>=0)
+		  { //add random nums to grid
+			cols=(int)(Math.random()*6+1); 
+			rows=(int)(Math.random()*5+1); 
+			while(grid[cols][rows]!=0)
+			  { 
+				cols=(int)(Math.random()*6+1); 
+				rows=(int)(Math.random()*5+1); 
+			  } 
+			this.grid[cols][rows]=save[n]; 
+			n--; 
+		  } 
+		mainFrame.setVisible(false); 
+		//reset button coordinates
+		pressInformation=false;
+		init(); 
+		for(int i = 0;i < 6;i++)
+		  { 
+	        for(int j = 0;j < 5;j++ )
+	          { 
+		        if(grid[i+1][j+1]==0)
+		          { // make the "removed" pics invisible 
+			         diamondsButton[i][j].setVisible(false); 
+			      } 
+		      }
+		  } 
+	  }
+
+	//record the coordinate of buttons
+	public void estimateEven(int placeX,int placeY,JButton bz) 
+	  {
+		if(pressInformation==false)
+		  {//if the first button is not pressed 
+	         x=placeX; 
+	         y=placeY; 
+	         fristMsg=grid[x][y];//fristMsg
+          	 fristButton=bz;//record the position (placeX，placeY)as fristButton
+	         pressInformation=true;
+		  }
+		else
+		  { /**
+		    *if the first button is pressed,record the coordinate using (x0,y0)
+		    *make secondButton equal to fristButton
+		    *record the coordinate of the second button as （x，y）
+		    *if the two numbers are equal, call remove()
+		    */
+			x0=x; 
+			y0=y; 
+			secondMsg=fristMsg;
+			secondButton=fristButton;
+			x=placeX; 
+			y=placeY; 
+			fristMsg=grid[x][y];
+			fristButton=bz; 
+			if(fristMsg==secondMsg && secondButton!=fristButton)
+			  { //if the two buttons have the same number, make both disappear
+				remove1(); 
+			  } 
+		  } 
+	  } 
+	
+	
+	public void remove1() 
+	  { 
+		if((x0==x &&(y0==y+1||y0==y-1)) || ((x0==x+1||x0==x-1)&&(y0==y)))
+		  { //if the two buttons are next to each other, remove both
+		     remove1(); 
+	      } 
+		else
+		  { //if two buttons are not adjacent
+			//check the buttons that are on the same row as the first pressed button
+			for (j=0;j<7;j++ ) 
+			  { //check for empty buttons
+				if (grid[x0][j]==0)
+				  { //if there is an empty button on the same row
+					if (y>j) 
+					  { //if the y-coordinate of the second button is greater than the empty button
+						//the empty button is on the left
+						for (i=y-1;i>=j;i--)
+						  { //check if there are buttons between the second button and (x,j) 
+							
+							if (grid[x][i]!=0) 
+							  {//if there is a button(obstacle), exist the loop 
+								k=0; 
+								break; 
+							  }	 
+							else
+							  { //no obstacles
+								k=1;//K=1
+							  } 
+						   } 
+						if (k==1)
+						  { 
+							
+							//already checked the column of the empty button and the left of the secondButton
+							//no obstacle
+							//pass the first test
+							linePassOne(); 
+						  } 
+					   } 
+					if (y<j)
+					  { //check the right 
+						for (i=y+1;i<=j;i++)
+						  { //check for emptiness
+							if (grid[x][i]!=0)
+							  { //if there is a button, exist the loop
+								k=0; 
+								break; 
+							  } 
+							else 
+							  {//if there's no button
+								k=1;
+							  } 
+						  } 
+						if (k==1)
+						  { //no buttons between the second button and (x,j)
+							linePassOne(); 
+						  } 
+					  } 
+					if (y==j ) 
+					  { //the second button is on the same column as the empty button
+						//meaning that the second button is on the same row as the first button
+						linePassOne(); 
+					  } 
+				  } 
+				if (k==2) 
+				  {//pass the second test
+					if (x0==x) 
+					  { //the two buttons are on the same row
+						remove1(); 
+					  } 
+					if (x0<x) 
+					  { //the second button is under the first button
+						for (n=x0;n<=x-1;n++)
+						  { //check if there are buttons b/t the empty button and (x-1,j)
+							if (grid[n][j]!=0)
+							  { //if there is a button, exist the loop
+								k=0; 
+								break; 
+							  } 
+							if(grid[n][j]==0&&n==x-1) 
+							  { //all empty buttons
+								remove1(); 
+							  } 
+						  } 
+					  } 
+					if (x0>x) 
+					  { //the first button is under the second button
+						for (n=x0;n>=x+1;n--)
+						  { 
+							if (grid[n][j]!=0) 
+							  { 
+								k=0; 
+								break; 
+							  } 
+							if(grid[n][j]==0&&n==x+1) 
+							  { 
+								remove1(); 
+							  } 
+						   } 
+					   } 
+				   } 
+			  } 
+			//on the same row as the first button
+			for (i=0;i<8;i++)
+			  { 
+				if (grid[i][y0]==0)
+				  { 
+					if (x>i)
+					  { 
+						for(j=x-1;j>=i;j--) 
+						  {
+							if (grid[j][y]!=0)
+							  { 
+								k=0; 
+								break; 
+							  } 
+							else
+							  { 
+								 k=1; 
+							  } 
+						   } 
+						if (k==1) 
+						  { 
+							rowPassOne(); 
+						  } 
+					} 
+					if (x<i)
+					  {
+						for (j=x+1;j<=i;j++) 
+						  {
+							if (grid[j][y]!=0)
+							 { 
+								k=0; 
+								break; 
+						 	 } 
+							else
+							  {
+								k=1; 
+							  } 
+						  } 
+						if (k==1)
+						  { //check for emptiness from second-(i,y)
+							rowPassOne(); 
+						  } 
+					 } 
+					if (x==i) 
+					 { //the second button is on the same row as the empty button
+						rowPassOne(); 
+					 } 
+				 } 
+				if (k==2)
+				  { //pass the second test
+					if (y0==y) 
+					  { //two buttons are on the same column
+						remove1(); 
+					  } 
+					if (y0<y) 
+					  { //the second button is under the s=first button
+						for (n=y0;n<=y-1;n++)
+						  { //check for emptiness from the empty button to (i,y-1)
+							if (grid[i][n]!=0)
+							  {
+								k=0; 
+								break; 
+							  } 
+							if(grid[i][n]==0&&n==y-1)
+							  { //check for emptiness between the empty button and (i,y-1)
+								remove1(); 
+							  } 
+						  } 
+				       } 
+					if (y0>y) 
+					  {  //the first button is under the second button
+                    	for (n=y0;n>=y+1;n--) 
+                    	  { ////check if there is buttons between (i,y+1) and the empty button
+		                    if (grid[i][n]!=0)
+		                      { 
+                    			k=0; 
+	                       		break; 
+		                      } 
+                    		if(grid[i][n]==0&&n==y+1) 
+                    		  { //no buttons between the first empty button and (i,y+1)
+			                     remove1(); 
+		                      } 
+	                      } 
+			           } 
+				} 
+			} 
+		} 
+	}
+	
+	
+	public void linePassOne()
+	  { 
+		if (y0>j)
+		  { //the first button is at the right of the row
+			for (i=y0-1;i>=j;i--)
+			  { //check if there's obstacles b/t the first and the second selected buttons
+	            if (grid[x0][i]!=0) 
+	              { //if there is obstacle, exist the loop
+	            	k=0;   
+		            break; 
+               	  } 
+	            else
+	              {//if there's not obstacle
+	            	k=2;//K=2 continue checking  
+	              } 
+			  } 
+	      } 
+		if (y0<j)
+		  { //the first pressed button is on the left of the row
+	         for (i=y0+1;i<=j;i++)
+	           { //check if there's obstacles b/t the first and the second selected buttons
+		         if (grid[x0][i]!=0)
+		          { //if there is obstacle, exist the loop
+			        k=0; 
+			        break; 
+		          } 
+		         else
+		          { 
+		        	 k=2;
+		          } 
+		       } 
+	       } 
+     } 
+	
+	
+	public void rowPassOne()
+	  { 
+		if (x0>i) 
+		  { //the first pressed button is on the bottom of the col
+			for (j=x0-1;j>=i;j--)
+			  {
+				if (grid[j][y0]!=0) 
+				  { 
+					k=0; 
+					break; 
+				  } 
+				else 
+				  {
+	            	k=2; 
+				  } 
+			  } 
+	       } 
+	if (x0<i)
+	  { //the first pressed button is on the top of the col
+		for (j=x0+1;j<=i;j++) 
+		  {  //if there is an obstacle button 
+	         if (grid[j][y0]!=0)
+	           { 
+		         k=0; 
+		         break; 
+	           } 
+	         else
+	           { 
+	        	 k=2; 
+	           } 
+		   } 
+	   } 
+	  } 
+	
+	//if you click on two Jbuttons, they would be invisible(set false)
+	public void remove()
+	  { 
+		fristButton.setVisible(false); 
+		secondButton.setVisible(false); 
+		fraction(); //add 100 every time when two pics are removed
+		/**
+		 * reset the properties of the removed button
+		 * set coordinates to 0
+	     */
+		pressInformation=false; 
+	    k=0; 
+	    grid[x0][y0]=0; 
+	    grid[x][y]=0; 
+	  } 
+	
+	
+	public void actionPerformed(ActionEvent e) 
+	  {
+		if(e.getSource()==newlyButton)
+		  {//new game 
+//			t.cancel();
+			flag=true;
+			int grid[][] = new int[8][7]; 
+			this.grid = grid; 
+			randomBuild(); //get 15 new random numbers
+			//reset all the informations 
+			mainFrame.setVisible(false); 
+			pressInformation=false; 
+//			fractionLable.setText("0");
+			init();
+//			t.cancel();
+		    timerDemo();
+//			time.setVisible(false);
+//			timerDemo();
+//			time.setVisible(true);
+		  } 
+		if(e.getSource()==exitButton)
+		  {//exist 
+			System.exit(0); 
+		  }
+		if(e.getSource()==resetButton) 
+			{//rearrange 
+			  reload(); 
+			}
+	    for(int cols = 0;cols < 6;cols++)
+	      { 
+		    for(int rows = 0;rows < 5;rows++ )
+		      { 
+			     if(e.getSource()==diamondsButton[cols][rows]) 
+				   {//call estimateEven when PicsButton is pressed
+			    	 estimateEven(cols+1,rows+1,diamondsButton[cols][rows]); 
+				   }
+		      } 
+	      } 
+     } 
+
+	/**
+	 * public void timerDemo()
+	 *    {
+	 *      t.schedule(new TimerTask()
+	 *        {
+	 *        int i=60;
+	 *        public void run() 
+	 *          {
+	 *          	if(i==0)
+	 *                {
+	 *                  time.setText("game over");
+	 *                  t.cancel();
+	 *                }
+	 *              else
+	 *                {
+	 *                  time.setText(""+i--);
+	 *                }
+	 *                }, 1000,1000);
+	 *                }
+     **/	
+	
+	//Timer
+	public void timerDemo()
+	     {
+//		    final Timer timer=new Timer();
+		    /**
+		      * schedule(TimerTask task, Date firstTime, long period)
+
+		      * let it loop the task in certain time
+		      **/
+		    t.schedule(new TimerTask(){//create a new timer
+				 int s=45  ;//time in sum
+				public void run()
+				  {//Job this timer needs to do
+					if(flag==true)
+					  {
+						this.cancel();//cancel the timer
+						flag=false;
+					  }
+					if(s==0)
+					  {//after time out, set the game over
+						time.setText("game over");
+						//this.cancel();
+						//after time out, set the button invisible
+						for(int i=0;i<6;i++)
+						  { 
+							for(int j=0;j<5;j++ )
+							  { 
+								if(grid[i+1][j+1]!=0) 
+								diamondsButton[i][j].setVisible(false); 
+							  }
+						  } 
+							
+//							JLabel l=new JLabel("Gime Over!",JLabel.CENTER);
+//							JPanel Center,North,Sourth;
+							
+//							centerPanel.add(l);
+							resetButton.setVisible(false);
+							newlyButton.setVisible(false);
+					}
+				else
+				  {
+					time.setText(""+s--);
+				  }
+					}
+					}, 1000,1000);
+	     }
+	
+	
+	public static void main(String[] args) 
+	  { 
+		Driver2 llk = new Driver2(); 
+		llk.randomBuild(); //get 15 random numbers
+		llk.init();
+		llk.timerDemo();
+	  } 
+}
