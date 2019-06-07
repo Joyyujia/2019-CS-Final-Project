@@ -1,0 +1,681 @@
+package lianliankan;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Timer;
+import java.util.TimerTask;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+
+
+
+
+
+
+
+
+
+
+public class lianliankan implements ActionListener 
+{ 
+	//main frame
+	JFrame mainFrame;	  
+	//container for mianFrame
+	Container thisContainer; 
+	
+	//side Panel
+	JPanel centerPanel,southPanel,northPanel,westPanel,eastPanel;
+	
+	//games button array
+	JButton diamondsButton[][] = new JButton[6][5];
+	
+	//buttons for start, exit and rearrange
+	JButton exitButton,resetButton,newlyButton;
+    //	JButton startButton;
+	//label for scores
+	JLabel fractionLable=new JLabel("0");
+	//label for time
+	JLabel time=new JLabel("");
+	
+	//use these two JButton to record two selected Buttons(pics)
+    JButton fristButton,secondButton;
+     
+    //save the location for buttons(pics)
+    int grid[][] = new int[8][7]; 
+    
+    //Judge if the button is pressed or not
+    static boolean pressInformation=false;
+    //coordinates for two selected buttons(pics)
+    //x0, y0; x, y
+    int x0=0,y0=0,x=0,y=0;
+    //两个被选中按钮上相应的数字
+    //the complement numbers on two selected buttons
+	int fristMsg=0,secondMsg=0;
+	int i,j,k,n;
+//	int s=0;
+	
+	final Timer t=new Timer();
+	Color o=Color.orange;
+	Color c=Color.cyan;
+	Color p=Color.pink;
+//	Color c=Color.blue;
+	boolean flag;
+	
+	
+	public void init()
+	  { //create the mainFrame and name it picture match
+		mainFrame=new JFrame("picture match"); 	
+		thisContainer = mainFrame.getContentPane(); 
+//		thisContainer.setBackground(c);
+		/**
+		 * divide thisContainerto 3 sections
+		 * Center, South & North
+		 * add score in North Section
+		 * add pic buttons in Center section
+		 * add buttons of rearrange , exit, and next
+		 */
+		thisContainer.setLayout(new BorderLayout()); 
+		centerPanel=new JPanel();
+		centerPanel.setBackground(o);//set the background orange
+		southPanel=new JPanel();
+		southPanel.setBackground(c);//set the background of south panel cyan
+		northPanel=new JPanel(new BorderLayout() ); 
+//		northPanel.setBackground(m);
+		westPanel=new JPanel();
+		westPanel.setBackground(p);//set the background of westpanel pink
+		eastPanel=new JPanel();
+		eastPanel.setBackground(p);//set the background of the westpanel pink
+//		Label time=new Label("time left：");
+		thisContainer.add(centerPanel,"Center"); 
+		thisContainer.add(southPanel,"South"); 
+		thisContainer.add(northPanel,"North"); 
+		northPanel.add(westPanel,"West");
+		northPanel.add(eastPanel,"Center");
+		westPanel.add(BorderLayout.WEST,new JLabel("               Time Left:"));//add the label of timer
+		westPanel.add(BorderLayout.EAST,time);
+		eastPanel.add(BorderLayout.CENTER,new JLabel("Your Score:"));//add the label of score
+		eastPanel.add(BorderLayout.EAST,fractionLable);
+		eastPanel.add(fractionLable,"Center");
+//		northPanel.add(fractionLable); 
+    /** 		
+      * eastPanel.add(new JLabel("Your Score:"));
+      * eastPanel.add(fractionLable);
+	  * westPanel.add(BorderLayout.WEST,new JLabel("             Time Left:"));
+	  *	westPanel.add(BorderLayout.EAST,new JLabel(time));
+	  * northPanel.add(westPanel); 
+	  */
+		//set the section of the center panel to be table-like
+		centerPanel.setLayout(new GridLayout(6,5)); 
+		for(int cols = 0;cols < 6;cols++)
+		  { 
+			for(int rows = 0;rows < 5;rows++ )
+			  { 
+				if(grid[cols+1][rows+1]!=0)
+				  {
+					//add pics to buttons 
+					diamondsButton[cols][rows]=createImgBtn(grid[cols+1][rows+1]+".jpg", String.valueOf(grid[cols+1][rows+1]));
+				  }
+				else
+				  {
+					//when the buttons are null, the picture is null
+				    diamondsButton[cols][rows]=createImgBtn("",String.valueOf(grid[cols+1][rows+1]));
+				  }
+            /**			
+            *	else
+			*	  {
+			*when the selected button is null, defined it as a new button
+			*		diamondsButton[cols][rows]=new JButton();
+			*	  }
+            */
+				diamondsButton[cols][rows].addActionListener(this); 
+				centerPanel.add(diamondsButton[cols][rows]); 
+			  } 
+		   }
+//		startButton=new JButton("开始");
+//		startButton.addActionListener(this);
+		exitButton=new JButton("Exit"); 
+		exitButton.addActionListener(this); 
+		resetButton=new JButton("Rearrange"); 
+		resetButton.addActionListener(this); 
+		newlyButton=new JButton("Next"); 
+		newlyButton.addActionListener(this);
+//		southPanel.add(startButton);
+		southPanel.add(exitButton); 
+		southPanel.add(resetButton); 
+		southPanel.add(newlyButton); 
+		
+		fractionLable.setText(String.valueOf(Integer.parseInt(fractionLable.getText()))); 
+		mainFrame.setBounds(180,10,800,650);//set the size for the main panel
+		mainFrame.setVisible(false);
+		mainFrame.setVisible(true); 
+//		centerPanel.setVisible(false);
+//		timerDemo();
+	  } 
+	
+	//create buttons with pics 
+	public JButton createImgBtn(String ing,String txt)
+	  {
+		//create an ImageIcon regarding to the named resources
+		ImageIcon image = new ImageIcon(getClass().getResource(ing));
+		JButton button = new JButton(txt,image);
+		//set the num at the bottom verical of the pics
+		button.setVerticalTextPosition(JButton.BOTTOM);
+		button.setHorizontalTextPosition(JButton.CENTER);
+		return button;
+	  }
+	
+	/**
+	 *产生游戏中的随机数字
+	 *数字至少两两相同
+	 */
+	public void randomBuild() 
+	  { 
+		int randoms,cols,rows; 
+		for(int twins=1;twins<=15;twins++) 
+		  { 
+			randoms=(int)(Math.random()*25+1);//随机产生一个1~25的数字 
+			for(int alike=1;alike<=2;alike++) 
+			  { //产生两个随机的坐标来存放同一个数字
+				cols=(int)(Math.random()*6+1); 
+				rows=(int)(Math.random()*5+1); 
+				while(grid[cols][rows]!=0)//避免出现重复的坐标
+				  { 
+					cols=(int)(Math.random()*6+1); 
+					rows=(int)(Math.random()*5+1); 
+				  } 
+				this.grid[cols][rows]=randoms; 
+			   } 
+		   } 
+	  } 
+	
+	//计算得分
+	public void fraction()
+	{ 
+		fractionLable.setText(String.valueOf(Integer.parseInt(fractionLable.getText())+100)); 
+	} 
+	
+	//重列
+	public void reload()
+	  { 
+		int save[] = new int[30]; 
+		int n=0,cols,rows; 
+		int grid[][]= new int[8][7];
+//		time.setVisible(false);
+		for(int i=0;i<=6;i++) 
+		   { 
+			for(int j=0;j<=5;j++) 
+			  { 
+				if(this.grid[i][j]!=0) 
+				  { //将未消去的图片的数字放在save数组中
+					save[n]=this.grid[i][j]; 
+					n++; 
+				  } 
+			  } 
+		   } 
+		n=n-1; 
+		this.grid=grid; //把grid数组全部初始化为零
+		while(n>=0)
+		  { //将剩下的所有图片数字重新随机放在数组grid中
+			cols=(int)(Math.random()*6+1); 
+			rows=(int)(Math.random()*5+1); 
+			while(grid[cols][rows]!=0)//避免出现重复的坐标
+			  { 
+				cols=(int)(Math.random()*6+1); 
+				rows=(int)(Math.random()*5+1); 
+			  } 
+			this.grid[cols][rows]=save[n]; 
+			n--; 
+		  } 
+		mainFrame.setVisible(false); 
+		//将按钮点击信息归为初始 
+		pressInformation=false;
+		init(); 
+		for(int i = 0;i < 6;i++)
+		  { 
+	        for(int j = 0;j < 5;j++ )
+	          { 
+		        if(grid[i+1][j+1]==0)
+		          {//将消去的按钮设置为不可见 
+			         diamondsButton[i][j].setVisible(false); 
+			      } 
+		      }
+		  } 
+	  }
+
+	//选中按钮信息的存储与操作
+	public void estimateEven(int placeX,int placeY,JButton bz) 
+	  {
+		if(pressInformation==false)
+		  {//如果第一个按钮未被击中，则将传来的按钮坐标赋给(x,y) 
+	         x=placeX; 
+	         y=placeY; 
+	         fristMsg=grid[x][y];//将按钮上的数字赋给fristMsg
+          	 fristButton=bz;//将(placeX，placey)位置上的按钮bz赋给fristButton
+	         pressInformation=true;//将按钮点击信息设置为true 
+		  }
+		else
+		  { /**
+		    *如果第一个按钮被击中 ,则将第一个按钮坐标赋给(x0,y0)
+		    *将fristButton按钮赋给secondButton按钮
+		    *将传来的按钮坐标赋给坐标（x，y）
+		    *如果当两个不同的按钮上的数字相等时则调用remove()函数消去
+		    */
+			x0=x; 
+			y0=y; 
+			secondMsg=fristMsg;//将击中的第一个按钮上的数字赋给第二个按钮
+			secondButton=fristButton;//将第一个按钮赋给第二个按钮
+			x=placeX; 
+			y=placeY; 
+			fristMsg=grid[x][y];//将传过来的按钮上的数字赋给fristMsg
+			fristButton=bz;//将传过来的按钮赋给fristButton 
+			if(fristMsg==secondMsg && secondButton!=fristButton)
+			  { //如果当两个不同的按钮上的数字相等时则消去
+				xiao(); 
+			  } 
+		  } 
+	  } 
+	
+	//消去
+	public void xiao() 
+	  { 
+		if((x0==x &&(y0==y+1||y0==y-1)) || ((x0==x+1||x0==x-1)&&(y0==y)))
+		  { //如果两个按钮相邻，则消去 
+		     remove(); 
+	      } 
+		else
+		  { //如果两个按钮不相邻
+			//判断与第一按钮同行的情况
+			for (j=0;j<7;j++ ) 
+			  { //判断第一个按钮同行哪个按钮为空
+				if (grid[x0][j]==0)
+				  { //如果同行有空按钮
+					if (y>j) 
+					  { //如果第二个按钮的y坐标大于空按钮的j坐标说明空按钮在第二按钮左边 
+						for (i=y-1;i>=j;i--)
+						  { //判断第二按钮左侧直到位置(x,j)有没有按钮 
+							//即判断与空按钮同列、与第二按钮同行的位置到第二按钮的左侧为止有没有按钮
+							if (grid[x][i]!=0) 
+							  {//如果有按钮，则将k初始化为零，并将跳出循环 
+								k=0; 
+								break; 
+							  }	 
+							else
+							  { //如果没有按钮
+								k=1;//K=1说明通过了第一次验证  
+							  } 
+						   } 
+						if (k==1)
+						  { //k==1说明横坐标为x,纵坐标从j到(y-1)的位置都没有按钮
+							//即说明与空按钮同列、与第二按钮同行的位置到第二按钮的左侧为止没有按钮
+							linePassOne(); 
+						  } 
+					   } 
+					if (y<j)
+					  { //如果第二个按钮的y坐标小于空按钮的j坐标说明空按钮在第二按钮右边 
+						for (i=y+1;i<=j;i++)
+						  { //判断第二按钮右侧直到位置(x,j)有没有按钮 
+							if (grid[x][i]!=0)
+							  { //如果有按钮，则将k初始化为零，并将跳出循环
+								k=0; 
+								break; 
+							  } 
+							else 
+							  {//如果没有按钮
+								k=1;
+							  } 
+						  } 
+						if (k==1)
+						  { //通过第一次验证，即第二按钮右侧直到位置(x,j)没有按钮
+							linePassOne(); 
+						  } 
+					  } 
+					if (y==j ) 
+					  { //第二个按钮与空按钮同列，即第二按钮与第一按钮同行
+						linePassOne(); 
+					  } 
+				  } 
+				if (k==2) 
+				  {//通过第二验证
+					if (x0==x) 
+					  { //两个按钮在同一行
+						remove(); 
+					  } 
+					if (x0<x) 
+					  { //第二个按钮所在行在第一按钮所在行的下面
+						for (n=x0;n<=x-1;n++)
+						  { //判断空按钮下侧直到位置(x-1,j)有没有按钮
+							if (grid[n][j]!=0)
+							  { //如果有按钮，将k初始化为零，并跳出循环
+								k=0; 
+								break; 
+							  } 
+							if(grid[n][j]==0&&n==x-1) 
+							  { //如果直到位置(x-1,j)没有按钮
+								remove(); 
+							  } 
+						  } 
+					  } 
+					if (x0>x) 
+					  { //第二个按钮所在行在第一按钮所在行的上面
+						for (n=x0;n>=x+1;n--)
+						  { //判断空按钮上侧直到位置(x+1,j)有没有按钮
+							if (grid[n][j]!=0) 
+							  { //如果有按钮，将k初始化为零，并跳出循环
+								k=0; 
+								break; 
+							  } 
+							if(grid[n][j]==0&&n==x+1) 
+							  { //如果直到位置(x+1,j)没有按钮
+								remove(); 
+							  } 
+						   } 
+					   } 
+				   } 
+			  } 
+			//判断与第一按钮同列情况
+			for (i=0;i<8;i++)
+			  { //判断第一个按钮同列哪个按钮为空
+				if (grid[i][y0]==0)
+				  { //同列有空按钮
+					if (x>i)
+					  { //如果第二个按钮的x坐标大于空按钮的i坐标说明空按钮在第二按钮上边
+						for(j=x-1;j>=i;j--) 
+						  {//判断第二按钮上侧直到位置(i,y)有没有按钮 
+							if (grid[j][y]!=0)
+							  { //如果有按钮，将k初始化为零，并跳出循环
+								k=0; 
+								break; 
+							  } 
+							else
+							  { //如果没有按钮
+								 k=1; //说明通过第一次验证
+							  } 
+						   } 
+						if (k==1) 
+						  { //第二按钮上侧直到位置(i,y)没有按钮
+							rowPassOne(); 
+						  } 
+					} 
+					if (x<i)
+					  { //空按钮在第二按钮下边
+						for (j=x+1;j<=i;j++) 
+						  { //判断第二按钮下侧直到位置(i,y)有没有按钮
+							if (grid[j][y]!=0)
+							 { 
+								k=0; 
+								break; 
+						 	 } 
+							else
+							  {
+								k=1; 
+							  } 
+						  } 
+						if (k==1)
+						  { //第二按钮下侧直到位置(i,y)没有按钮
+							rowPassOne(); 
+						  } 
+					 } 
+					if (x==i) 
+					 { //第二按钮与空按钮同行
+						rowPassOne(); 
+					 } 
+				 } 
+				if (k==2)
+				  { //通过第二次验证
+					if (y0==y) 
+					  { //两个按钮同列
+						remove(); 
+					  } 
+					if (y0<y) 
+					  { //第二按钮所在行在第一按钮所在行的下面
+						for (n=y0;n<=y-1;n++)
+						  { //判断空按钮右侧直到位置(i,y-1)有没有按钮
+							if (grid[i][n]!=0)
+							  { //如果有按钮，将k初始化为零，并跳出循环
+								k=0; 
+								break; 
+							  } 
+							if(grid[i][n]==0&&n==y-1)
+							  { //空按钮右侧直到位置(i,y-1)没有按钮
+								remove(); 
+							  } 
+						  } 
+				       } 
+					if (y0>y) 
+					  {  //第二按钮所在行在第一按钮所在行的上面
+                    	for (n=y0;n>=y+1;n--) 
+                    	  { //判断空按钮左侧直到位置(i,y+1)有没有按钮
+		                    if (grid[i][n]!=0)
+		                      { 
+                    			k=0; 
+	                       		break; 
+		                      } 
+                    		if(grid[i][n]==0&&n==y+1) 
+                    		  { //空按钮左侧直到位置(i,y+1)没有按钮
+			                     remove(); 
+		                      } 
+	                      } 
+			           } 
+				} 
+			} 
+		} 
+	}
+	
+	/**
+	 * 第一按钮的同行中存在空按钮
+	 * 判断在同一行中空按钮与第一个按钮之间的位置是否有按钮存在，如果有则k=0,否则k=2
+	 * */
+	public void linePassOne()
+	  { 
+		if (y0>j)
+		  { //第一按钮在同行空按钮的右边 
+			for (i=y0-1;i>=j;i--)
+			  { //判断第一按钮同左侧空按钮之间有没按钮 
+	            if (grid[x0][i]!=0) 
+	              { //如果有按钮，将k初始化为零，并跳出循环
+	            	k=0;   
+		            break; 
+               	  } 
+	            else
+	              {//如果没有按钮
+	            	k=2;//K=2说明通过了第二次验证  
+	              } 
+			  } 
+	      } 
+		if (y0<j)
+		  { //第一按钮在同行空按钮的左边 
+	         for (i=y0+1;i<=j;i++)
+	           { //判断第一按钮同右侧空按钮之间有没按钮 
+		         if (grid[x0][i]!=0)
+		          { //如果有按钮，将k初始化为零，并跳出循环
+			        k=0; 
+			        break; 
+		          } 
+		         else
+		          { 
+		        	 k=2;
+		          } 
+		       } 
+	       } 
+     } 
+	
+	/**
+	 * 第一按钮的同列中存在空按钮
+	 * 判断在同一列中空按钮与第一个按钮之间的位置是否有按钮存在，如果有则k=0,否则k=2
+	 * */
+	public void rowPassOne()
+	  { 
+		if (x0>i) 
+		  { //第一按钮在同列空按钮的下边
+			for (j=x0-1;j>=i;j--)
+			  { //判断第一按钮同上侧空按钮之间有没按钮
+				if (grid[j][y0]!=0) 
+				  { //如果有按钮，将k初始化为零，并跳出循环
+					k=0; 
+					break; 
+				  } 
+				else 
+				  {//如果没有按钮
+	            	k=2;//K=2说明通过了第二次验证 
+				  } 
+			  } 
+	       } 
+	if (x0<i)
+	  { //第一按钮在同列空按钮的上边
+		for (j=x0+1;j<=i;j++) 
+		  {  //判断第一按钮同下侧空按钮之间有没按钮
+	         if (grid[j][y0]!=0)
+	           { 
+		         k=0; 
+		         break; 
+	           } 
+	         else
+	           { 
+	        	 k=2; 
+	           } 
+		   } 
+	   } 
+	  } 
+	
+	//if you click on two Jbuttons, they would be invisible(set false)
+	public void remove()
+	  { 
+		fristButton.setVisible(false); 
+		secondButton.setVisible(false); 
+		fraction(); //每消去一对按钮则加100分
+		/**
+		 * 将点击按钮信息归为初始
+		 * 将K和被消去的两个按钮的坐标初始为零
+	     */
+		pressInformation=false; 
+	    k=0; 
+	    grid[x0][y0]=0; 
+	    grid[x][y]=0; 
+	  } 
+	
+	//实现事件监听
+	public void actionPerformed(ActionEvent e) 
+	  {
+		if(e.getSource()==newlyButton)
+		  {//点击下一局按钮事件 
+//			t.cancel();
+			flag=true;
+			int grid[][] = new int[8][7]; 
+			this.grid = grid; //将grid数组初始化为零
+			randomBuild(); //重新获取15个随机的1~25的数字
+			//将一切信息归为初始
+			mainFrame.setVisible(false); 
+			pressInformation=false; 
+//			fractionLable.setText("0");
+			init();
+//			t.cancel();
+		    timerDemo();
+//			time.setVisible(false);
+//			timerDemo();
+//			time.setVisible(true);
+		  } 
+		if(e.getSource()==exitButton)
+		  {//点击退出按钮事件
+			System.exit(0); 
+		  }
+		if(e.getSource()==resetButton) 
+			{//点击重列按钮事件
+			  reload(); 
+			}
+	    for(int cols = 0;cols < 6;cols++)
+	      { 
+		    for(int rows = 0;rows < 5;rows++ )
+		      { 
+			     if(e.getSource()==diamondsButton[cols][rows]) 
+				   {//当点击按钮时，调用estimateEven方法
+			    	 estimateEven(cols+1,rows+1,diamondsButton[cols][rows]); 
+				   }
+		      } 
+	      } 
+     } 
+
+	/**
+	 * public void timerDemo()
+	 *    {
+	 *      t.schedule(new TimerTask()
+	 *        {
+	 *        int i=60;
+	 *        public void run() 
+	 *          {
+	 *          	if(i==0)
+	 *                {
+	 *                  time.setText("game over");
+	 *                  t.cancel();
+	 *                }
+	 *              else
+	 *                {
+	 *                  time.setText(""+i--);
+	 *                }
+	 *                }, 1000,1000);
+	 *                }
+     **/	
+	
+	//Timer
+	public void timerDemo()
+	     {
+//		    final Timer timer=new Timer();
+		    /**
+		      * schedule(TimerTask task, Date firstTime, long period)
+
+		      * let it loop the task in certain time
+		      **/
+		    t.schedule(new TimerTask(){//create a new timer
+				 int s=45  ;//time in sum
+				public void run()
+				  {//Job this timer needs to do
+					if(flag==true)
+					  {
+						this.cancel();//cancel the timer
+						flag=false;
+					  }
+					if(s==0)
+					  {//after time out, set the game over
+						time.setText("game over");
+						//this.cancel();
+						//after time out, set the button invisible
+						for(int i=0;i<6;i++)
+						  { 
+							for(int j=0;j<5;j++ )
+							  { 
+								if(grid[i+1][j+1]!=0) 
+								diamondsButton[i][j].setVisible(false); 
+							  }
+						  } 
+							
+//							JLabel l=new JLabel("Gime Over!",JLabel.CENTER);
+//							JPanel Center,North,Sourth;
+							
+//							centerPanel.add(l);
+							resetButton.setVisible(false);
+							newlyButton.setVisible(false);
+					}
+				else
+				  {
+					time.setText(""+s--);
+				  }
+					}
+					}, 1000,1000);
+	     }
+	
+	//主方法
+	public static void main(String[] args) 
+	  { 
+		lianliankan llk = new lianliankan(); 
+		llk.randomBuild(); //获取15个随机的1~25的数字
+		llk.init();
+		llk.timerDemo();
+	  } 
+}
