@@ -4,6 +4,8 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -101,8 +103,8 @@ public class Driver2 implements ActionListener
 		eastPanel.add(BorderLayout.EAST,fractionLable);
 		eastPanel.add(fractionLable,"Center");
 		
-        //instruction.getImg().setVisible(true);
-		//centerPanel.add(instruction.getImg());
+        instruction.getImg().setVisible(true);
+		centerPanel.add(instruction.getImg());
 		
 		
     /** 		
@@ -147,7 +149,39 @@ public class Driver2 implements ActionListener
 		resetButton.addActionListener(this); 
 		newlyButton=new JButton("Next"); 
 		newlyButton.addActionListener(this);
-        
+		startButton.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				
+				
+				instruction.getImg().setVisible(false);
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}});
+
 		southPanel.add(startButton); 
 		southPanel.add(exitButton); 
 		southPanel.add(resetButton); 
