@@ -27,7 +27,7 @@ public class Driver2 implements ActionListener
 	JButton diamondsButton[][] = new JButton[6][5];
 	
 	//buttons for start, exit and rearrange
-	JButton exitButton,resetButton,newlyButton;
+	JButton startButton,exitButton,resetButton,newlyButton;
     //	JButton startButton;
 	//label for scores
 	JLabel fractionLable=new JLabel("0");
@@ -52,15 +52,15 @@ public class Driver2 implements ActionListener
 //	int s=0;
 	
 	final Timer t=new Timer();
-	Color o=Color.orange;
+	Color o= new Color(210,250, 200);
 	Color c=Color.cyan;
 	Color p=Color.pink;
-//	Color c=Color.blue;
+
 	boolean flag;
 	
 	Table table = new Table ("6x7 table.png");
 	
-    GameOver go = new GameOver("Result.jpg");
+   
 	
 	Instructions instruction = new Instructions("Instruction Page.png");
 	
@@ -68,7 +68,7 @@ public class Driver2 implements ActionListener
 	  { //create the mainFrame and name it picture match
 		mainFrame=new JFrame(); 	
 		mainFrame.setTitle("Picture Matching");
-		mainFrame.setSize(700, 800);
+		
 		thisContainer = mainFrame.getContentPane(); 
 //		thisContainer.setBackground(c);
 		/**
@@ -84,12 +84,12 @@ public class Driver2 implements ActionListener
 		southPanel=new JPanel();
 		southPanel.setBackground(c);//set the background of south panel cyan
 		northPanel=new JPanel(new BorderLayout() ); 
-//		northPanel.setBackground(m);
+
 		westPanel=new JPanel();
 		westPanel.setBackground(p);//set the background of westpanel pink
 		eastPanel=new JPanel();
 		eastPanel.setBackground(p);//set the background of the westpanel pink
-//		Label time=new Label("time left：");
+
 		thisContainer.add(centerPanel,"Center"); 
 		thisContainer.add(southPanel,"South"); 
 		thisContainer.add(northPanel,"North"); 
@@ -100,7 +100,11 @@ public class Driver2 implements ActionListener
 		eastPanel.add(BorderLayout.CENTER,new JLabel("Your Score:"));//add the label of score
 		eastPanel.add(BorderLayout.EAST,fractionLable);
 		eastPanel.add(fractionLable,"Center");
-//		northPanel.add(fractionLable); 
+		
+        //instruction.getImg().setVisible(true);
+		//centerPanel.add(instruction.getImg());
+		
+		
     /** 		
       * eastPanel.add(new JLabel("Your Score:"));
       * eastPanel.add(fractionLable);
@@ -135,15 +139,16 @@ public class Driver2 implements ActionListener
 				centerPanel.add(diamondsButton[cols][rows]); 
 			  } 
 		   }
-//		startButton=new JButton("Start");
-//		startButton.addActionListener(this);
+		startButton = new JButton("Start");
+	    startButton.addActionListener(this);
 		exitButton=new JButton("Exit"); 
 		exitButton.addActionListener(this); 
 		resetButton=new JButton("Rearrange"); 
 		resetButton.addActionListener(this); 
 		newlyButton=new JButton("Next"); 
 		newlyButton.addActionListener(this);
-//		southPanel.add(startButton);
+        
+		southPanel.add(startButton); 
 		southPanel.add(exitButton); 
 		southPanel.add(resetButton); 
 		southPanel.add(newlyButton); 
@@ -153,10 +158,9 @@ public class Driver2 implements ActionListener
 		mainFrame.setVisible(false);
 		mainFrame.setVisible(true); 
 		mainFrame.add(table.getImg());
-		mainFrame.add(go.getImg());
-		mainFrame.add(instruction.getImg());
-//		centerPanel.setVisible(false);
-//		timerDemo();
+		
+		
+
 		
 	  } 
 	
@@ -288,7 +292,7 @@ public class Driver2 implements ActionListener
 	  { 
 		if((x0==x &&(y0==y+1||y0==y-1)) || ((x0==x+1||x0==x-1)&&(y0==y)))
 		  { //if the two buttons are next to each other, remove both
-		     remove1(); 
+		     remove(); 
 	      } 
 		else
 		  { //if two buttons are not adjacent
@@ -351,7 +355,7 @@ public class Driver2 implements ActionListener
 				  {//pass the second test
 					if (x0==x) 
 					  { //the two buttons are on the same row
-						remove1(); 
+						remove(); 
 					  } 
 					if (x0<x) 
 					  { //the second button is under the first button
@@ -364,7 +368,7 @@ public class Driver2 implements ActionListener
 							  } 
 							if(grid[n][j]==0&&n==x-1) 
 							  { //all empty buttons
-								remove1(); 
+								remove(); 
 							  } 
 						  } 
 					  } 
@@ -379,7 +383,7 @@ public class Driver2 implements ActionListener
 							  } 
 							if(grid[n][j]==0&&n==x+1) 
 							  { 
-								remove1(); 
+								remove(); 
 							  } 
 						   } 
 					   } 
@@ -437,7 +441,7 @@ public class Driver2 implements ActionListener
 				  { //pass the second test
 					if (y0==y) 
 					  { //two buttons are on the same column
-						remove1(); 
+						remove(); 
 					  } 
 					if (y0<y) 
 					  { //the second button is under the s=first button
@@ -450,7 +454,7 @@ public class Driver2 implements ActionListener
 							  } 
 							if(grid[i][n]==0&&n==y-1)
 							  { //check for emptiness between the empty button and (i,y-1)
-								remove1(); 
+								remove(); 
 							  } 
 						  } 
 				       } 
@@ -465,7 +469,7 @@ public class Driver2 implements ActionListener
 		                      } 
                     		if(grid[i][n]==0&&n==y+1) 
                     		  { //no buttons between the first empty button and (i,y+1)
-			                     remove1(); 
+			                     remove(); 
 		                      } 
 	                      } 
 			           } 
@@ -632,7 +636,7 @@ public class Driver2 implements ActionListener
 		      * let it loop the task in certain time
 		      **/
 		    t.schedule(new TimerTask(){//create a new timer
-				 int s=45  ;//time in sum
+				 int s=35  ;//time in sum
 				public void run()
 				  {//Job this timer needs to do
 					if(flag==true)
@@ -672,9 +676,9 @@ public class Driver2 implements ActionListener
 	
 	public static void main(String[] args) 
 	  { 
-		Driver2 llk = new Driver2(); 
-		llk.randomBuild(); //get 15 random numbers
-		llk.init();
-		llk.timerDemo();
+		Driver2 d = new Driver2(); 
+		d.randomBuild(); 
+		d.init();
+		d.timerDemo();
 	  } 
 }
